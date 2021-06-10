@@ -4,16 +4,18 @@ import { TextInput as Input  } from 'react-native';
 import  * as method from '../../Method/Method';
 
 class TextInput extends Component {
+  state = {
+    value : ''
+  }
   
   constructor(props){
     super(props)
 
     if(method.gfo_getInput(props.pgm, props.id) !== undefined){
-      method.gfc_getMultiLang('dup', '인풋 아이디 중복입니다. > ' + props.pgm + ', ' + props.id);
+      //김경현
+      // method.gfc_getMultiLang('dup', '인풋 아이디 중복입니다. > ' + props.pgm + ', ' + props.id);
       return 
     } 
-
-    this.inputRef = createRef();
 
     method.gfs_dispatch(props.pgm, 'INITINPUT', 
       ({
@@ -23,11 +25,24 @@ class TextInput extends Component {
     );
   }
 
+  getValue = () => {
+    return this.state.value;
+  }
+
+  onChangeText = (e) => {
+    this.setState({
+      value: e
+    });
+
+    this.props.onChangeText(e);
+  }
+
   render() {
     return (
       <Input placeholder={this.props.placeholder} 
              autoFocus={this.props.autoFocus}
              secureTextEntry={this.props.secureTextEntry}
+             value={this.state.value}
 
              style={{
                width: this.props.width,
@@ -47,7 +62,10 @@ class TextInput extends Component {
                paddingLeft: this.props.paddingLeft,
                paddingRight: this.props.paddingRight,
              }}
-             ref={this.inputRef}
+             onChange = {this.props.onChange}
+             onChangeText = {
+               e => this.onChangeText(e)
+             }
              >
           
       </Input>

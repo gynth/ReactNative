@@ -21,6 +21,8 @@ class TouchableOpacity extends Component {
                 paddingLeft: this.props.paddingLeft,
                 paddingRight: this.props.paddingRight,
               }}
+
+              onPress = {this.props.onPress}
       >
         {this.props.children}
       </Button>

@@ -4,6 +4,7 @@ import TextInput from './Component/Control/TextInput';
 import Text from './Component/Control/Text';
 import TouchableOpacity from './Component/Control/TouchableOpacity';
 import  * as method from './Method/Method';
+import { getDynamicSql_Mysql } from './Mysql/Mysql';
 
 export default class  Login extends Component {
     state = {
@@ -15,6 +16,32 @@ export default class  Login extends Component {
       super(props)
       method.gfs_pgm_reducer('login')
     }
+
+    onPress = (e) => {
+      // console.log(e);
+
+      const user_id = method.gfo_getInput('login', 'id').getValue();
+      const pass_cd = method.gfo_getInput('login', 'pwd').getValue();
+
+      getDynamicSql_Mysql(
+        'Common/Common',
+        'login',
+        [{user_id,
+          pass_cd}]
+      ).then(
+        result => {
+          if(result.data.result){
+            if(result.data.data.length === 0){
+              console.log('로그인 정보가 잘못되었습니다.');
+            }else{
+              console.log('로그인 성공');
+            }
+          }else{
+            console.log('로그인에 실패했습니다.')
+          }
+        }
+      )
+    };
   
     render(){
       return (
@@ -39,7 +66,24 @@ export default class  Login extends Component {
                      borderStyle  = 'solid'
                      borderColor  = '#DBDBDB'
                      marginTop    = {3}
-                     paddingLeft  = {10}>
+                     paddingLeft  = {10}
+                     
+                     onChangeText = {e => {
+                       const id = e;
+                       const pwd = method.gfo_getInput('login', 'pwd').getValue();
+
+                       if(id.length > 0 && pwd.length > 0){ 
+                        this.setState({
+                          btnBackGround: '#0095f6',
+                          btnDisable: false
+                        })
+                       }else{
+                         this.setState({
+                           btnBackGround: '#b2dffc',
+                           btnDisable: true
+                         })
+                       }
+                     }}>
           </TextInput>
           
           <TextInput pgm          = 'login'
@@ -53,7 +97,25 @@ export default class  Login extends Component {
                      borderColor  = '#DBDBDB'
                      marginTop    = {3}
                      paddingLeft  = {10}
-                     secureTextEntry >
+                     secureTextEntry
+                     
+                     onChangeText = {e => {
+                       const id = method.gfo_getInput('login', 'id').getValue();
+                       const pwd = e;
+
+                       if(id.length > 0 && pwd.length > 0){ 
+                        this.setState({
+                          btnBackGround: '#0095f6',
+                          btnDisable: false
+                        })
+                       }else{
+                         this.setState({
+                           btnBackGround: '#b2dffc',
+                           btnDisable: true
+                         })
+                       }
+                     }}
+          >
           </TextInput>
           
           <TouchableOpacity disabled        = {this.state.btnDisable}
@@ -64,6 +126,8 @@ export default class  Login extends Component {
                             alignItems      = 'center'
                             justifyContent  = 'center'
                             backgroundColor = {this.state.btnBackGround}
+                            onPress         = {e => this.onPress(e)}
+                            
           >
             <Text pgm='login'
                   id='login_title' color='white'>Login</Text>

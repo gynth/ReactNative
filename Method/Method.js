@@ -2,7 +2,7 @@ import { store, injectAsyncReducer } from '../Store';
 // import { jsonMaxValue, jsonRtn } from '../JSON/jsonControl';
 
 //#region 스토어 함수
-export const gfs_getValue = (reducer, value) => {
+export const gfs_getStoreValue = (reducer, value) => {
   let rtnValue = undefined;
 
   const getState = store.getState();
@@ -88,7 +88,7 @@ export const gfo_getInput = (parent, inputId) => {
   let storeValue;
 
   if(type === 'string'){
-    storeValue = gfs_getValue(parent, 'Input');
+    storeValue = gfs_getStoreValue(parent, 'Input');
   }else{
     storeValue = parent['Input'];
   }
@@ -108,6 +108,9 @@ export const gfc_getMultiLang = (code, text) => {
   alert(code + '[' + text + ']');
 }
 
+export const gfc_getAtt = (code) => { 
+  return code;
+}
 //#endregion
 
 // export const gfs_WINDOWFRAME_REDUCER = () => {
